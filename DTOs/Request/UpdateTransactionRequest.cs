@@ -1,0 +1,114 @@
+using System.ComponentModel.DataAnnotations;
+using MozeApi.Entities;
+
+namespace MozeApi.DTOs.Request
+{
+    /// <summary>
+    /// 更新交易請求 DTO
+    /// </summary>
+    public class UpdateTransactionRequest
+    {
+        /// <summary>
+        /// 交易類型 (支出/收入)
+        /// </summary>
+        public TransactionType? TransactionType { get; set; }
+
+        /// <summary>
+        /// 金額
+        /// </summary>
+        public decimal? Amount { get; set; }
+
+        /// <summary>
+        /// 貨幣名稱
+        /// </summary>
+        [MaxLength(10)]
+        public string? Currency { get; set; }
+
+        /// <summary>
+        /// 帳戶名稱
+        /// </summary>
+        [MaxLength(100)]
+        public string? Account { get; set; }
+
+        /// <summary>
+        /// 專案名稱
+        /// </summary>
+        [MaxLength(100)]
+        public string? Project { get; set; }
+
+        /// <summary>
+        /// 類別名稱
+        /// </summary>
+        [MaxLength(100)]
+        public string? Category { get; set; }
+
+        /// <summary>
+        /// 子類別名稱
+        /// </summary>
+        [MaxLength(100)]
+        public string? Subcategory { get; set; }
+
+        /// <summary>
+        /// 記錄名稱
+        /// </summary>
+        [MaxLength(200)]
+        public string? Name { get; set; }
+
+        /// <summary>
+        /// 商家
+        /// </summary>
+        [MaxLength(200)]
+        public string? Store { get; set; }
+
+        /// <summary>
+        /// 備註
+        /// </summary>
+        [MaxLength(500)]
+        public string? Note { get; set; }
+
+        /// <summary>
+        /// 標籤 (用 "," 分隔)
+        /// </summary>
+        [MaxLength(500)]
+        public string? Tags { get; set; }
+
+        /// <summary>
+        /// 日期 (格式: YYYY.MM.dd)
+        /// </summary>
+        [MaxLength(10)]
+        public string? Date { get; set; }
+
+        /// <summary>
+        /// 時間 (格式: HH:mm)
+        /// </summary>
+        [MaxLength(5)]
+        public string? Time { get; set; }
+
+        /// <summary>
+        /// 手續費
+        /// </summary>
+        public decimal? Fee { get; set; }
+
+        /// <summary>
+        /// 手續費名稱
+        /// </summary>
+        [MaxLength(100)]
+        public string? FeeName { get; set; }
+
+        /// <summary>
+        /// 回饋金
+        /// </summary>
+        public decimal? Bonus { get; set; }
+
+        /// <summary>
+        /// 回饋名稱
+        /// </summary>
+        [MaxLength(100)]
+        public string? BonusName { get; set; }
+
+        /// <summary>
+        /// 是否啟用
+        /// </summary>
+        public bool? IsActive { get; set; }
+    }
+}

@@ -1,0 +1,10 @@
+{
+  "github.copilot.chat.commitMessageGeneration.instructions": [
+    {
+      "file": "ConventionalCommits.md"
+    },
+    {
+      "text": "Description 欄位必須使用繁體中文撰寫，不可使用英文。"
+    }
+  ]
+}
