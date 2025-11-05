@@ -35,7 +35,7 @@ namespace MozeApi.DTOs.Request
 
         /// <summary>
         /// 專案名稱
-        /// </summary>
+        /// </summary>ㄓ
         [MaxLength(100)]
         public string? Project { get; set; }
 

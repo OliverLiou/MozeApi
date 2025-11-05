@@ -5,6 +5,7 @@ using  MozeApi.Services;
 using Microsoft.OpenApi.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System.Reflection;
 
@@ -19,7 +20,11 @@ if (string.IsNullOrWhiteSpace(connectionStr))
     throw new InvalidOperationException("Database connection string is not configured. Please set DATABASE_URL environment variable or configure ConnectionStrings:MozeContext in appsettings.json");
 }
 
-builder.Services.AddIdentity<User, Role>().AddEntityFrameworkStores<MozeContext>();
+// builder.Services.AddIdentity<User, Role>().AddEntityFrameworkStores<MozeContext>();
+builder.Services.AddIdentityCore<User>()
+    .AddRoles<Role>()
+    .AddEntityFrameworkStores<MozeContext>()
+    .AddDefaultTokenProviders();
 
 builder.Services.AddDbContext<MozeContext>(opt => opt.UseNpgsql(connectionStr));
 
@@ -74,22 +79,38 @@ builder.Services.AddScoped<IRecordService, RecordService>();
 
 //JWT驗證加密
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
+// builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+//     .AddJwtBearer(options =>
+//     {
+//         options.TokenValidationParameters = new TokenValidationParameters
+//         {
+//             ValidateIssuerSigningKey = true,
+//             IssuerSigningKey = new SymmetricSecurityKey(
+//             Encoding.UTF8.GetBytes(jwtSettings["SecretKey"]!)),
+//             ValidateIssuer = true,
+//             ValidIssuer = jwtSettings["Issuer"],
+//             ValidateAudience = true,
+//             ValidAudience = jwtSettings["Audience"],
+//             ValidateLifetime = true,
+//             ClockSkew = TimeSpan.Zero
+//         };
+//     });
+builder.Services.AddAuthentication().AddJwtBearer(options =>
+  {
+    options.TokenValidationParameters = new TokenValidationParameters
     {
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(
-            Encoding.UTF8.GetBytes(jwtSettings["SecretKey"]!)),
-            ValidateIssuer = true,
-            ValidIssuer = jwtSettings["Issuer"],
-            ValidateAudience = true,
-            ValidAudience = jwtSettings["Audience"],
-            ValidateLifetime = true,
-            ClockSkew = TimeSpan.Zero
-        };
-    });
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(
+        Encoding.UTF8.GetBytes(jwtSettings["SecretKey"]!)),
+        ValidateIssuer = true,
+        ValidIssuer = jwtSettings["Issuer"],
+        ValidateAudience = true,
+        ValidAudience = jwtSettings["Audience"],
+        ValidateLifetime = true,
+        ClockSkew = TimeSpan.Zero
+    };
+  });
+
 
 // CORS
 var corsPolicyName = "AllowFrontend";

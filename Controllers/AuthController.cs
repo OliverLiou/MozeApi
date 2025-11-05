@@ -13,7 +13,7 @@ namespace MozeApi.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class AuthController(IGoogleAuthService googleAuthService, IJwtService jwtService, IAuthService authService) : ControllerBase
+    public class AuthController(IGoogleAuthService googleAuthService, IJwtService jwtService, IAuthService authService) : BaseController
     {
         private readonly IGoogleAuthService _googleAuthService = googleAuthService;
         private readonly IJwtService _jwtService = jwtService;

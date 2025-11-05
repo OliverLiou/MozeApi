@@ -1,4 +1,6 @@
 using System.Linq.Expressions;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MozeApi.DTOs.Request;
 using MozeApi.DTOs.Response;
@@ -12,7 +14,7 @@ namespace MozeApi.Controllers
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
-    public class RecordController(IRecordService recordService) : ControllerBase
+    public class RecordController(IRecordService recordService) : BaseController
     {
         private readonly IRecordService _recordService = recordService;
 
@@ -60,16 +62,20 @@ namespace MozeApi.Controllers
         /// <param name="sortBy">排序欄位 (可選: amount, date, createdAt)</param>
         /// <param name="sortOrder">排序方向 (asc/desc, 預設: desc)</param>
         /// <param name="search">搜尋關鍵字</param>
+        [Authorize]
         [HttpGet("GetTransactions")]
         public async Task<ActionResult<PagedResponse<TransactionResponse>>> GetTransactions(
             [FromQuery] int page = 1,
             [FromQuery] int pageSize = 10,
             [FromQuery] string? sortBy = null,
-            [FromQuery] string? sortOrder = "desc",
+            [FromQuery] string? sortOrder = "asc",
             [FromQuery] string? search = null)
         {
             try
             {
+                // 取得當前登入使用者的 ID
+                var userId = GetCurrentUserId()!;
+
                 if (page < 1) page = 1;
                 if (pageSize < 1) pageSize = 10;
                 if (pageSize > 100) pageSize = 100; // 限制最大筆數
@@ -89,13 +95,13 @@ namespace MozeApi.Controllers
                 {
                     "amount" => t => t.Amount,
                     "date" => t => t.Date!,
-                    _ => t => t.CreatedAt
+                    _ => t => t.TransactionId
                 };
 
                 var result = await _recordService.FindAsync<Transaction, TransactionResponse>(
                     page: page,
                     pageSize: pageSize,
-                    filter: t => t.IsActive,
+                    filter: t => t.IsActive && t.UserId == userId, // 只顯示當前使用者的資料
                     orderBy: orderBy,
                     orderByDescending: sortOrder?.ToLower() != "asc",
                     searchPredicate: searchPredicate,
