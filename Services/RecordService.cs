@@ -95,10 +95,7 @@ namespace MozeApi.Services
             return new PagedResponse<TResponse>
             {
                 Data = _mapper.Map<List<TResponse>>(entities),
-                CurrentPage = page,
-                PageSize = pageSize,
                 TotalCount = totalCount,
-                TotalPages = totalPages
             };
         }
 

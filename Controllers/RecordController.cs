@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using MozeApi.DTOs.Request;
 using MozeApi.DTOs.Response;
 using MozeApi.Entities;
+using MozeApi.Helpers;
 using MozeApi.Services;
 
 namespace MozeApi.Controllers
@@ -81,14 +82,7 @@ namespace MozeApi.Controllers
                 if (pageSize > 100) pageSize = 100; // 限制最大筆數
 
                 // 建立搜尋條件
-                Expression<Func<Transaction, bool>>? searchPredicate = null;
-                if (!string.IsNullOrWhiteSpace(search))
-                {
-                    searchPredicate = t => typeof(Transaction)
-                        .GetProperties()
-                        .Where(p => p.PropertyType == typeof(string) && p.GetValue(t) != null)
-                        .Any(p => ((string)p.GetValue(t)!).Contains(search));
-                }
+                var searchPredicate = SearchExpressionBuilder.BuildSearchExpression<Transaction>(search);
 
                 // 建立排序欄位
                 Expression<Func<Transaction, object>> orderBy = sortBy?.ToLower() switch
@@ -213,14 +207,7 @@ namespace MozeApi.Controllers
                 if (pageSize > 100) pageSize = 100; // 限制最大筆數
 
                 // 建立搜尋條件
-                Expression<Func<AppUrl, bool>>? searchPredicate = null;
-                if (!string.IsNullOrWhiteSpace(search))
-                {
-                    searchPredicate = a => typeof(AppUrl)
-                        .GetProperties()
-                        .Where(p => p.PropertyType == typeof(string) && p.GetValue(a) != null)
-                        .Any(p => ((string)p.GetValue(a)!).Contains(search));
-                }
+                var searchPredicate = SearchExpressionBuilder.BuildSearchExpression<AppUrl>(search);
 
                 // 建立排序欄位
                 Expression<Func<AppUrl, object>> orderBy = sortBy?.ToLower() switch

@@ -9,7 +9,8 @@
       "Bash(dotnet build)",
       "WebFetch(domain:urlscheme.moze.app)",
       "Bash(dotnet build:*)",
-      "Bash(git init:*)"
+      "Bash(git init:*)",
+      "Bash(dotnet list:*)"
     ],
     "deny": []
   }
